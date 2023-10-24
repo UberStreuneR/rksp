@@ -15,6 +15,6 @@ func generateArr(n int) []int {
 }
 
 func main() {
-	practice_3()
-	// test_tcp()
+	go rsocket_server()
+	rsocket_client2()
 }
