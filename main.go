@@ -15,6 +15,7 @@ func generateArr(n int) []int {
 }
 
 func main() {
-	go rsocket_server()
+	server := RsocketServer{}
+	go server.serve()
 	rsocket_client2()
 }
