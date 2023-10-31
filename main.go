@@ -1,6 +1,7 @@
 package main
 
 import (
+	practice04 "client-server/practice_04"
 	"math/rand"
 	"time"
 )
@@ -15,7 +16,7 @@ func generateArr(n int) []int {
 }
 
 func main() {
-	server := RsocketServer{}
-	go server.serve()
-	rsocket_client2()
+	server := practice04.RsocketServer{}
+	go server.Serve()
+	// practice04.Rsocket_client2()
 }
