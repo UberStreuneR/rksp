@@ -1,0 +1,135 @@
+192.168.0.0/26
+
+255.255.255.248
+
+1) 192.168.0.0/29
+2) 192.168.0.8/29
+3) 192.168.0.16/29
+4) 192.168.0.24/29
+5) 192.168.0.32/29
+6) 192.168.0.40/29
+7) 192.168.0.48/29
+8) 192.168.0.56/29
+
+PC-A 192.168.0.11 VLAN 10 default-gateway 192.168.0.14
+PC-B 192.168.0.19 VLAN 14 default-gateway 192.168.0.22
+PC-C 192.168.0.29 default-gateway 192.168.0.27
+
+S0 VLAN 14 192.168.0.20 default-gateway 192.168.0.22
+R0-R2 R0(g0/0) 192.168.0.49 R2(g0/0) 192.168.0.54
+R1-R2 R1(g0/0) 192.168.0.57 R2(g0/1) 192.168.0.62
+R0
+    g0/1.10 192.168.0.9
+    g0/1.14 192.168.0.17
+R1 
+    g0/2.10 192.168.0.10
+    g0/2.14 192.168.0.18
+R2 g0/2 192.168.0.27
+
+1 Задание
+    R2:
+        hostname Zachet
+        no ip domain-lookup
+        line console 0
+            password console
+            login
+        line vty 0 15
+            password Telnet
+            login
+        enable secret privilege
+        service password-encryption
+        banner motd #Warning#
+        copy run start
+
+2 Задание
+    S0
+        interface range f0/3-9, f0/12-24, g0/1-2
+            shutdown
+        vlan 10
+        vlan 14
+        interface range f0/10-11
+            switchport mode access
+            switchport port-security
+            switchport port-security maximum 5
+            switchport port-security violation protect
+        interface f0/10
+            switchport access vlan 10
+        interface f0/11
+            switchport access vlan 14
+        interface vlan 14
+            ip address 192.168.0.20 255.255.255.248
+        ip default-gateway 192.168.0.22 255.255.255.248                 ????
+
+3 Задание
+    S0
+        interface range f0/1-2
+        switchport mode trunk
+        switchport trunk allowed vlan 10,14
+        switchport trunk native vlan 80
+
+4 Задание
+    R0
+        interface g0/1
+            no shutdown
+        interface g0/1.10
+            encapsulation dot1Q 10
+            ip address 192.168.0.9 255.255.255.248
+        interface g0/1.14
+            encapsulation dot1Q 14
+            ip address 192.168.0.17 255.255.255.248
+        interface g0/1.80
+            encapsulation dot1Q 80
+    R1
+        interface g0/2
+            no shutdown
+        interface g0/2.10
+            encapsulation dot1Q 10
+            ip address 192.168.0.10 255.255.255.248
+        interface g0/2.14
+            encapsulation dot1Q 14
+            ip address 192.168.0.18 255.255.255.248
+        interface g0/2.80
+            encapsulation dot1Q 80
+
+5 Задание
+    R2
+        interface g0/0
+             ip address 192.168.0.54 255.255.255.248
+             no shutdown
+        interface g0/1
+             ip address 192.168.0.62 255.255.255.248
+             no shutdown
+        interface g0/2
+             ip address 192.168.0.27 255.255.255.248
+             no shutdown
+    R0
+        interface g0/0
+            ip address 192.168.0.49 255.255.255.248
+        ip route 192.168.0.24 255.255.255.248 192.168.0.54
+    R1
+        interface g0/0
+            ip address 192.168.0.57 255.255.255.248
+        ip route 192.168.0.24 255.255.255.248 192.168.0.62
+    R2
+        ip route 0.0.0.0 0.0.0.0 192.168.0.49
+        ip route 0.0.0.0 0.0.0.0 192.168.0.57 11
+
+6 Задание
+    R0
+        interface g0/1
+            standby version 2
+        interface g0/1.10
+            standby 10 ip 192.168.0.14
+        interface g0/1.14
+            standby 14 ip 192.168.0.22
+    R1
+        interface g0/2
+            standby version 2
+        interface g0/2.10
+            standby 10 ip 192.168.0.14
+        interface g0/2.14
+            standby 14 ip 192.168.0.22
+    
+
+
+
